@@ -201,6 +201,7 @@ writematrix(normSurfResultStats, directory + 'normSurfResults.csv', 'WriteMode',
 
 vImarisApplication.FileSave(directory + filename, '');
 
+%{
 folderContents = dir (directory);
 folderContentsNames = folderContents(:,:).name;
 folderIMSContents = folderContentsNames(endsWith(string(folderContentsNames), '.ims'));
@@ -212,5 +213,6 @@ if currentFileIndex < folderSize
     vImarisApplication.FileOpen(directory + nextFile);
     Lin28Util(aImarisApplicationID);
 end
+%}
 
 msgbox('DONE');
