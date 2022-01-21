@@ -211,14 +211,10 @@ folderContents = dir (directory);
 folderIMSContents = strings;
 for i = 1:size(folderContents)
     if endsWith(folderContents(i,1).name, '.ims')
-        test = folderContents(i,1).name;
-        test2 = string(folderContents(i,1).name);
         folderIMSContents(end + 1) = string(folderContents(i,1).name);
     end
 end
 folderIMSContents = folderIMSContents(2:end);
-%folderContentsNames = folderContents(:,:).name;
-%folderIMSContents = folderContentsNames(endsWith(string(folderContentsNames), '.ims'));
 
 currentFileIndex = find(folderIMSContents == filename, 1, "last");
 folderSize = numel(folderIMSContents);
