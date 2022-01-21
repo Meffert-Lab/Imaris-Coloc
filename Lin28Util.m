@@ -121,7 +121,12 @@ else
     MAP2SurfaceObject = SurfaceObject2;
 end
 
-filename = string(vImarisApplication.GetCurrentFileName());
+filenameWithPath = string(vImarisApplication.GetCurrentFileName());
+if numel(strfind(filenameWithPath, '//')) ~= 0
+    filenameWithPath = extractBetween(filenameWithPath, max(strfind(filenameWithPath, "//")) + 1, strlength(filenameWithPath));
+end
+
+filename = extractBetween(filenameWithPath, max(strfind(filenameWithPath, "/")) + 1, strlength(filenameWithPath));
 
 Lin28Surfacesstats = Lin28SurfaceObject.GetStatistics();
 MAP2SurfacesLin28stats = MAP2SurfaceObject.GetStatistics();
@@ -175,7 +180,7 @@ surfResultStats = [filename, Lin28SurStat, MAP2Lin28SurStat, S100Lin28SurStat];
 normSpotResultStats = [filename, numel(MAP2Spots.GetIds) / MAP2volume, numel(S100Spots.GetIds) / S100volume];
 normSurfResultStats = [filename, MAP2Lin28SurStat / MAP2volume, S100Lin28SurStat / S100volume];
 
-directory = extractBetween(filename, 1, max(strfind(filename, '/')));
+directory = extractBetween(filenameWithPath, 1, max(strfind(filenameWithPath, '/')));
 
 if not(isfile(directory + 'spotResults.csv'))
     SpotResultHeader = ['FILENAME', 'N TOTAL', 'N MAP2', 'N S100'];
@@ -201,18 +206,26 @@ writematrix(normSurfResultStats, directory + 'normSurfResults.csv', 'WriteMode',
 
 vImarisApplication.FileSave(directory + filename, '');
 
-%{
+
 folderContents = dir (directory);
-folderContentsNames = folderContents(:,:).name;
-folderIMSContents = folderContentsNames(endsWith(string(folderContentsNames), '.ims'));
+folderIMSContents = strings;
+for i = 1:size(folderContents)
+    if endsWith(folderContents(i,1).name, '.ims')
+        test = folderContents(i,1).name;
+        test2 = string(folderContents(i,1).name);
+        folderIMSContents(end + 1) = string(folderContents(i,1).name);
+    end
+end
+folderIMSContents = folderIMSContents(2:end);
+%folderContentsNames = folderContents(:,:).name;
+%folderIMSContents = folderContentsNames(endsWith(string(folderContentsNames), '.ims'));
 
 currentFileIndex = find(folderIMSContents == filename, 1, "last");
 folderSize = numel(folderIMSContents);
 if currentFileIndex < folderSize
     nextFile = folderIMSContents(currentFileIndex + 1);
-    vImarisApplication.FileOpen(directory + nextFile);
+    vImarisApplication.FileOpen(directory + nextFile, '');
     Lin28Util(aImarisApplicationID);
 end
-%}
 
 msgbox('DONE');
