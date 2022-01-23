@@ -109,7 +109,7 @@ for vChildIndex = 1:vNumberOfChildren
   
   if vImarisApplication.GetFactory.IsSurfaces(vDataItem)
     vSurfaces = vImarisApplication.GetFactory.ToSurfaces(vDataItem);
-    if strncmpi(vSurfaces.GetName, 'Lin28', 5)
+    if strncmpi(vSurfaces.GetName, 'Lin28a', 5)
         continue;
     end
     vAllIndices = vSpotsTime;
@@ -140,6 +140,7 @@ for vChildIndex = 1:vNumberOfChildren
     %waitbar(vChildIndex / vNumberOfChildren, vProgressDisplay);
     
     vSpotsInside = vImarisApplication.GetFactory.CreateSpots;
+    vSpotsInside.SetVisible(0);
     vSpotsInside.Set(vSpotsXYZ(vAllIndices, :), vSpotsTime(vAllIndices), ...
         zeros(sum(vAllIndices~=0),1));
     vSpotsInside.SetRadiiXYZ(vSpotsRadius(vAllIndices,:));

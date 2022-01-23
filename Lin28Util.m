@@ -40,9 +40,18 @@ end
 
 aSurpassScene = vImarisApplication.GetSurpassScene();
 numObjects = aSurpassScene.GetNumberOfChildren();
+
+for a = 1:numObjects
+    VisibleObject = aSurpassScene.GetChild(a-1);
+    VisibleObject.SetVisible(0);
+end
+
+vImarisApplication.SetVisible(0);
+
+
 for a = 1:numObjects
     Lin28Object = aSurpassScene.GetChild(a-1);
-    if vImarisApplication.GetFactory.IsSpots(Lin28Object) && strcmpi(Lin28Object.GetName(), 'Lin28')
+    if vImarisApplication.GetFactory.IsSpots(Lin28Object) && strcmpi(Lin28Object.GetName(), 'Lin28a')
         break;
     end
 end
@@ -52,7 +61,7 @@ if not(vImarisApplication.GetFactory.IsSpots(Lin28Object))
 end
 for a = 1:numObjects
     Lin28SurfaceObject = aSurpassScene.GetChild(a-1);
-    if vImarisApplication.GetFactory.IsSurfaces(Lin28SurfaceObject) && strcmpi(Lin28SurfaceObject.GetName(), 'Lin28')
+    if vImarisApplication.GetFactory.IsSurfaces(Lin28SurfaceObject) && strcmpi(Lin28SurfaceObject.GetName(), 'Lin28a')
         break;
     end
 end

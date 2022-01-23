@@ -152,6 +152,7 @@ for vChildIndex = 1:vNumberOfChildren
         vNumberOfChildren, vProgressDisplay);
     end
     vSurfaceContainingSpots = vSurfaces.CopySurfaces(surfacesWithSpotsIndices);
+    vSurfaceContainingSpots.SetVisible(0);
     vSurfaceContainingSpots.SetName(sprintf('%s containing %s', char(vSurfaces.GetName), vSpotsName));
     vImarisApplication.GetSurpassScene.AddChild(vSurfaceContainingSpots,-1);
   end
