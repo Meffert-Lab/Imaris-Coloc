@@ -233,4 +233,5 @@ if currentFileIndex < folderSize
     Lin28Util(aImarisApplicationID);
 end
 
+vImarisApplication.SetVisible(1);
 msgbox('DONE');
