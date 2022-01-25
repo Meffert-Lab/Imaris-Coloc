@@ -186,25 +186,25 @@ S100volume = sum(S100StatValues);
 Lin28Spots = vImarisApplication.GetFactory.ToSpots(Lin28Object);
 spotResultStats = [filename, numel(Lin28Spots.GetIds), numel(MAP2Spots.GetIds), numel(S100Spots.GetIds)];
 surfResultStats = [filename, Lin28SurStat, MAP2Lin28SurStat, S100Lin28SurStat];
-normSpotResultStats = [filename, numel(MAP2Spots.GetIds) / MAP2volume, numel(S100Spots.GetIds) / S100volume];
-normSurfResultStats = [filename, MAP2Lin28SurStat / MAP2volume, S100Lin28SurStat / S100volume];
+normSpotResultStats = [filename, MAP2volume, numel(MAP2Spots.GetIds) / MAP2volume, S100volume, numel(S100Spots.GetIds) / S100volume, numel(S100Spots.GetIds) / (S100volume - MAP2volume)];
+normSurfResultStats = [filename, MAP2volume, MAP2Lin28SurStat / MAP2volume, MAP2Lin28SurStat, S100volume, S100Lin28SurStat / S100volume, S100Lin28SurStat / (S100volume - MAP2volume)];
 
 directory = extractBetween(filenameWithPath, 1, max(strfind(filenameWithPath, '/')));
 
 if not(isfile(directory + 'spotResults.csv'))
-    SpotResultHeader = ['FILENAME', 'N TOTAL', 'N MAP2', 'N S100'];
+    SpotResultHeader = ["FILENAME" "N TOTAL" "N MAP2" "N S100"];
     writematrix(SpotResultHeader, directory + 'spotResults.csv', 'WriteMode', 'append');
 end
 if not(isfile(directory + 'surfResults.csv'))
-    SurfResultHeader = ['FILENAME', 'VOL TOTAL', 'VOL MAP2', 'VOL S100'];
+    SurfResultHeader = ["FILENAME" "VOL TOTAL" "VOL MAP2" "VOL S100"];
     writematrix(SurfResultHeader, directory + 'surfResults.csv', 'WriteMode', 'append');
 end
 if not(isfile(directory + 'normSpotResults.csv'))
-    NormSpotResultHeader = ['FILENAME', 'N MAP2 NORM', 'N S100 NORM'];
+    NormSpotResultHeader = ["FILENAME" "VOL MAP2" "N MAP2 NORM" "VOL S100" "N S100 NORM" "N S100-MAP2 NORM"];
     writematrix(NormSpotResultHeader, directory + 'normSpotResults.csv', 'WriteMode', 'append');
 end
 if not(isfile(directory + 'normSurfResults.csv'))
-    NormSurfResultHeader = ['FILENAME', 'VOL MAP2 NORM', 'VOL S100 NORM'];
+    NormSurfResultHeader = ["FILENAME" "VOL MAP2" "VOL IN MAP2 NORM" "VOL S100" "VOL IN S100 NORM" "VOL IN S100-MAP2 NORM"];
     writematrix(NormSurfResultHeader, directory + 'normSurfResults.csv', 'WriteMode', 'append');
 end
 
