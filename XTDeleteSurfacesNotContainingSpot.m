@@ -85,7 +85,7 @@ if numel(vSpotsXYZ) == 0
                 continue;
             end
             
-            EmptySurface = vImarisApplication.GetFactory.CreateSurface;
+            EmptySurface = vImarisApplication.GetFactory.CreateSurfaces;
             EmptySurface.SetVisible(0);
             EmptySurface.SetName(sprintf('%s containing %s', char(vSurfaces.GetName), vSpotsName));
             vImarisApplication.GetSurpassScene.AddChild(EmptySurface, -1);

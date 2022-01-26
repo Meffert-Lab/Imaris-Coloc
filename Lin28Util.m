@@ -55,7 +55,7 @@ for a = 1:numObjects
         break;
     end
 end
-if not(vImarisApplication.GetFactory.IsSpots(Lin28Object))
+if not(vImarisApplication.GetFactory.IsSpots(Lin28Object) && strcmpi(Lin28Object.GetName(), 'Lin28a'))
     msgbox('Please create Lin28 spots!');
     return;
 end
@@ -65,7 +65,7 @@ for a = 1:numObjects
         break;
     end
 end
-if not(vImarisApplication.GetFactory.IsSurfaces(Lin28SurfaceObject))
+if not(vImarisApplication.GetFactory.IsSurfaces(Lin28SurfaceObject) && strcmpi(Lin28SurfaceObject.GetName(), 'Lin28a'))
     msgbox('Please create Lin28 surfaces!');
     return;
 end
@@ -75,7 +75,7 @@ for a = 1:numObjects
         break;
     end
 end
-if not(vImarisApplication.GetFactory.IsSurfaces(MAP2Object))
+if not(vImarisApplication.GetFactory.IsSurfaces(MAP2Object) && strcmpi(MAP2Object.GetName(), 'MAP2'))
     msgbox('Please create MAP2 surfaces!');
     return;
 end
@@ -85,7 +85,7 @@ for a = 1:numObjects
         break;
     end
 end
-if not(vImarisApplication.GetFactory.IsSurfaces(S100Object))
+if not(vImarisApplication.GetFactory.IsSurfaces(S100Object) && strcmpi(S100Object.GetName(), 'S100'))
     msgbox('Please create S100 surfaces!');
     return;
 end
