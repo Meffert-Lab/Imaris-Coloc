@@ -45,7 +45,7 @@ for a = numObjects:-1:1
         break;
     end
 end
-%str = S100Object.GetName();
+
 for b = numObjects:-1:1
     MAP2Object = aSurpassScene.GetChild(b-1);
     if vImarisApplication.GetFactory.IsSpots(MAP2Object) && endsWith(MAP2Object.GetName(), sprintf('%s %s', 'inside', 'MAP2'))
@@ -56,7 +56,7 @@ if not(endsWith(S100Object.GetName(), 'inside S100')) && endsWith(MAP2Object.Get
     msgbox('Please create MAP2 and S100 spots inside Lin28!');
     return;
 end
-%str2 = MAP2Object.GetName();
+
 
 S100Spots = vImarisApplication.GetFactory.ToSpots(S100Object);
 S100SpotsCoords = S100Spots.GetPositionsXYZ();

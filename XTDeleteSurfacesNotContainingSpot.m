@@ -63,14 +63,44 @@ vSpotsTime = vSpots.GetIndicesT;
 vSpotsName = char(vSpots.GetName);
 
 vSpots.SetVisible(false);
+
+% get the parent group
+vParentGroup = vSpots.GetParent;
+
+if numel(vSpotsXYZ) == 0
+    
+    vNumberOfChildren = vParentGroup.GetNumberOfChildren;
+    for vChildIndex = 1:vNumberOfChildren
+        vDataItem = vParentGroup.GetChild(vChildIndex - 1);
+  
+        if vImarisApplication.GetFactory.IsSurfaces(vDataItem)
+            vSurfaces = vImarisApplication.GetFactory.ToSurfaces(vDataItem);
+            if strcmpi(vSurfaces.GetName, 'MAP2')
+                continue;
+            end
+            if strcmpi(vSurfaces.GetName, 'S100')
+                continue;
+            end
+            if numel(strfind(vSurfaces.GetName, 'containing')) ~= 0
+                continue;
+            end
+            
+            EmptySurface = vImarisApplication.GetFactory.CreateSurface;
+            EmptySurface.SetVisible(0);
+            EmptySurface.SetName(sprintf('%s containing %s', char(vSurfaces.GetName), vSpotsName));
+            vImarisApplication.GetSurpassScene.AddChild(EmptySurface, -1);
+        end
+    end
+    return;
+end
+
 vTimeInterval = min(vSpotsTime):max(vSpotsTime);
 vIndicesSpotsTime = cell(numel(vTimeInterval), 1);
 for vTime = vTimeInterval
   vIndicesSpotsTime{vTime - vTimeInterval(1) + 1} = find(vSpotsTime == vTime);
 end
 
-% get the parent group
-vParentGroup = vSpots.GetParent;
+
 
 % mask volume
 vMin = min(vSpotsXYZ);
