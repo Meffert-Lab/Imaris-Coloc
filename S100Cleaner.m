@@ -41,14 +41,14 @@ aSurpassScene = vImarisApplication.GetSurpassScene();
 numObjects = aSurpassScene.GetNumberOfChildren();
 for a = numObjects:-1:1
     S100Object = aSurpassScene.GetChild(a-1);
-    if vImarisApplication.GetFactory.IsSpots(S100Object) && endsWith(S100Object.GetName(), sprintf('%s %s', 'inside', 'S100'))
+    if vImarisApplication.GetFactory.IsSpots(S100Object) && endsWith(string(S100Object.GetName()), sprintf('%s %s', 'inside', 'S100'), 'IgnoreCase', true)
         break;
     end
 end
 
 for b = numObjects:-1:1
     MAP2Object = aSurpassScene.GetChild(b-1);
-    if vImarisApplication.GetFactory.IsSpots(MAP2Object) && endsWith(MAP2Object.GetName(), sprintf('%s %s', 'inside', 'MAP2'))
+    if vImarisApplication.GetFactory.IsSpots(MAP2Object) && endsWith(string(MAP2Object.GetName()), sprintf('%s %s', 'inside', 'MAP2'), 'IgnoreCase', true)
         break;
     end
 end

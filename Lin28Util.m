@@ -1,7 +1,7 @@
 %
 %  Lin28Util
 %  Sreenivas Eadara (written for the Meffert Lab)
-%
+%  Requires R2021b
 %
 %  Installation:
 %
@@ -46,7 +46,7 @@ for a = 1:numObjects
     VisibleObject.SetVisible(0);
 end
 
-vImarisApplication.SetVisible(0);
+%vImarisApplication.SetVisible(0);
 
 
 for a = 1:numObjects
@@ -99,7 +99,7 @@ numObjects = aSurpassScene.GetNumberOfChildren();
 SpotObject1 = vImarisApplication.GetSurpassScene.GetChild(numObjects - 2);
 SpotObject2 = vImarisApplication.GetSurpassScene.GetChild(numObjects - 1);
 
-if endsWith(SpotObject1.GetName(), 'MAP2')
+if endsWith(string(SpotObject1.GetName()), "MAP2", 'IgnoreCase', true)
     MAP2SpotsObject = SpotObject1;
     S100SpotsObject = SpotObject2;
 else
@@ -122,7 +122,7 @@ numObjects = aSurpassScene.GetNumberOfChildren();
 SurfaceObject1 = vImarisApplication.GetSurpassScene.GetChild(numObjects - 2);
 SurfaceObject2 = vImarisApplication.GetSurpassScene.GetChild(numObjects - 1);
 
-if endsWith (SurfaceObject1.GetName(), 'MAP2')
+if endsWith (string(SurfaceObject1.GetName()), "MAP2", 'IgnoreCase', true)
     MAP2SurfaceObject = SurfaceObject1;
     S100SurfaceObject = SurfaceObject2;
 else

@@ -103,8 +103,14 @@ end
 
 
 % mask volume
-vMin = min(vSpotsXYZ);
-vMax = max(vSpotsXYZ);
+
+if size(vSpotsXYZ, 1) == 1
+    vMin = vSpotsXYZ;
+    vMax = vSpotsXYZ;
+else
+    vMin = min(vSpotsXYZ);
+    vMax = max(vSpotsXYZ);
+end
 
 % add 1% border to be sure to include all spots (avoid edge effects)
 vDelta = vMax - vMin;
