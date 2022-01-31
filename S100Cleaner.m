@@ -66,6 +66,16 @@ S100RadiiXYZ = S100Spots.GetRadiiXYZ();
 MAP2Spots = vImarisApplication.GetFactory.ToSpots(MAP2Object);
 MAP2SpotsCoords = MAP2Spots.GetPositionsXYZ();
 
+if size(MAP2SpotsCoords, 1) == 1
+    for j=1:size(S100SpotsCoords, 1) - 1
+        if MAP2SpotsCoords(1,:) == S100SpotsCoords(j,:)
+            S100SpotsCoords(j,:) = [];
+            S100IndicesT(j,:) = [];
+            S100RadiiXYZ(j,:) = [];
+        end
+    end
+end
+
 for i=1:size(MAP2SpotsCoords, 1) - 1
     for j=1:size(S100SpotsCoords, 1) - 1
         if MAP2SpotsCoords(i,:) == S100SpotsCoords(j,:)
