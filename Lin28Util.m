@@ -187,7 +187,7 @@ Lin28Spots = vImarisApplication.GetFactory.ToSpots(Lin28Object);
 spotResultStats = [filename, numel(Lin28Spots.GetIds), numel(MAP2Spots.GetIds), numel(S100Spots.GetIds)];
 surfResultStats = [filename, Lin28SurStat, MAP2Lin28SurStat, S100Lin28SurStat];
 normSpotResultStats = [filename, MAP2volume, numel(MAP2Spots.GetIds) / MAP2volume, S100volume, numel(S100Spots.GetIds) / S100volume, numel(S100Spots.GetIds) / (S100volume - MAP2volume)];
-normSurfResultStats = [filename, MAP2volume, MAP2Lin28SurStat / MAP2volume, MAP2Lin28SurStat, S100volume, S100Lin28SurStat / S100volume, S100Lin28SurStat / (S100volume - MAP2volume)];
+normSurfResultStats = [filename, MAP2volume, MAP2Lin28SurStat / MAP2volume, S100volume, S100Lin28SurStat / S100volume, S100Lin28SurStat / (S100volume - MAP2volume)];
 
 directory = extractBetween(filenameWithPath, 1, max(strfind(filenameWithPath, '/')));
 
