@@ -52,7 +52,8 @@ for b = numObjects:-1:1
         break;
     end
 end
-if not(endsWith(S100Object.GetName(), 'inside S100'), 'IgnoreCase', true) && endsWith(MAP2Object.GetName(), 'inside MAP2', 'IgnoreCase', true)
+if not(endsWith(string(S100Object.GetName()), sprintf('%s %s', 'inside', 'S100'), 'IgnoreCase', true) && ...
+        endsWith(string(MAP2Object.GetName()), sprintf('%s %s', 'inside', 'MAP2'), 'IgnoreCase', true))
     msgbox('Please create MAP2 and S100 spots inside Lin28!');
     return;
 end
