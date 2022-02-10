@@ -138,7 +138,7 @@ vImarisApplication.SetDataSet(vDataSet);
 
 %Run the Surface Creation Wizard on the new channel
 ip = vImarisApplication.GetImageProcessing;
-Coloc_surfaces1 = ip.DetectSurfaces(vDataSet, [], vLastChannel, vSmoothingFactor, 0, true, 55, '');
+Coloc_surfaces1 = ip.DetectSurfaces(vDataSet, [], vLastChannel, vSmoothingFactor, 0, false, 0, '');
 Coloc_surfaces1.SetName(sprintf('ColocSurface'));
 Coloc_surfaces1.SetColorRGBA((rand(1, 1)) * 256 * 256 * 256 );
 
