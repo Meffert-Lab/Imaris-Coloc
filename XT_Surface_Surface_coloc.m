@@ -190,10 +190,10 @@ surfResultStats = [filename, ColocVolume, MAP2volume, S100volume];
 
 if not(isfile(directory + 'colocResults.csv'))
     ColocResultHeader = ["FILENAME" "VOL COLOC" "VOL MAP2" "VOL S100"];
-    writematrix(ColocResultHeader, directory + 'surfResults.csv', 'WriteMode', 'append');
+    writematrix(ColocResultHeader, directory + 'colocResults.csv', 'WriteMode', 'append');
 end
 
-writematrix(surfResultStats, directory + 'surfResults.csv', 'WriteMode', 'append');
+writematrix(surfResultStats, directory + 'colocResults.csv', 'WriteMode', 'append');
 
 vImarisApplication.FileSave(directory + filename, '');
 
