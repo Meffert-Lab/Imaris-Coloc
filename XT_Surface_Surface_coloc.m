@@ -45,8 +45,8 @@ end
 
 %%
 % the user has to create a scene with some surfaces
-vSurpassScene = vImarisApplication.GetSurpassScene;
-if isequal(vSurpassScene, [])
+aSurpassScene = vImarisApplication.GetSurpassScene();
+if isequal(aSurpassScene, [])
     msgbox('Please create some Surfaces in the Surpass scene!');
     return;
 end
@@ -61,6 +61,7 @@ vDataSet = vImarisApplication.GetDataSet.Clone;
 
 %%
 % get all Surpass surfaces names
+numObjects = aSurpassScene.GetNumberOfChildren();
 
 for a = 1:numObjects
     MAP2Object = aSurpassScene.GetChild(a-1);
@@ -71,7 +72,7 @@ end
 if not(vImarisApplication.GetFactory.IsSurfaces(MAP2Object) && strcmpi(MAP2Object.GetName(), 'MAP2'))
     msgbox('Please create MAP2 surfaces!');
     return;
-end
+    endS
 for a = 1:numObjects
     S100Object = aSurpassScene.GetChild(a-1);
     if vImarisApplication.GetFactory.IsSurfaces(S100Object) && strcmpi(S100Object.GetName(), 'S100')
@@ -210,7 +211,7 @@ folderSize = numel(folderIMSContents);
 if currentFileIndex < folderSize
     nextFile = folderIMSContents(currentFileIndex + 1);
     vImarisApplication.FileOpen(directory + nextFile, '');
-    Lin28Util(aImarisApplicationID);
+    XT_Surface_Surface_coloc(aImarisApplicationID);
 end
 
 %vImarisApplication.SetVisible(1);
