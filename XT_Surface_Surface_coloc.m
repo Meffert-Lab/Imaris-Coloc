@@ -72,7 +72,7 @@ end
 if not(vImarisApplication.GetFactory.IsSurfaces(MAP2Object) && strcmpi(MAP2Object.GetName(), 'MAP2'))
     msgbox('Please create MAP2 surfaces!');
     return;
-    endS
+end
 for a = 1:numObjects
     S100Object = aSurpassScene.GetChild(a-1);
     if vImarisApplication.GetFactory.IsSurfaces(S100Object) && strcmpi(S100Object.GetName(), 'S100')
