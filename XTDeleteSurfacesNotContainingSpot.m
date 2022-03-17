@@ -27,7 +27,7 @@
 %       surfaces object with only surfaces that contain spots.
 %
 
-function XTDeleteSurfacesNotContainingSpot(aImarisApplicationID)
+function XTDeleteSurfacesNotContainingSpot(aImarisApplicationID, varargin)
 
 % connect to Imaris interface
 if ~isa(aImarisApplicationID, 'Imaris.IApplicationPrxHelper')
@@ -56,6 +56,12 @@ if ~vImarisApplication.GetFactory.IsSpots(vSpots)
   return;
 end
 
+channelsToAvoid = [];
+if ~isempty(varargin)
+    channelsToAvoid = varargin{1};
+end
+
+
 % get the spots coordinates
 vSpotsXYZ = vSpots.GetPositionsXYZ;
 vSpotsTime = vSpots.GetIndicesT;
@@ -72,19 +78,24 @@ if numel(vSpotsXYZ) == 0
     vNumberOfChildren = vParentGroup.GetNumberOfChildren;
     for vChildIndex = 1:vNumberOfChildren
         vDataItem = vParentGroup.GetChild(vChildIndex - 1);
-  
+
         if vImarisApplication.GetFactory.IsSurfaces(vDataItem)
+            skip = false;
             vSurfaces = vImarisApplication.GetFactory.ToSurfaces(vDataItem);
-            if strcmpi(vSurfaces.GetName, 'MAP2')
-                continue;
-            end
-            if strcmpi(vSurfaces.GetName, 'S100')
-                continue;
+            if ~isempty(channelsToAvoid)
+                for a = 1:size(channelsToAvoid, 1)
+                    if strcmpi(vSurfaces.getName, channelsToAvoid(a, :))
+                        skip = true;
+                        break;
+                    end
+                end
             end
             if numel(strfind(vSurfaces.GetName, 'containing')) ~= 0
                 continue;
             end
-            
+            if skip
+                continue;
+            end
             EmptySurface = vImarisApplication.GetFactory.CreateSurfaces;
             EmptySurface.SetVisible(0);
             EmptySurface.SetName(sprintf('%s containing %s', char(vSurfaces.GetName), vSpotsName));
@@ -142,16 +153,21 @@ vProgressDisplay = waitbar(0, 'Identifying surfaces');
 vNumberOfChildren = vParentGroup.GetNumberOfChildren;
 for vChildIndex = 1:vNumberOfChildren
   vDataItem = vParentGroup.GetChild(vChildIndex - 1);
-  
+
   if vImarisApplication.GetFactory.IsSurfaces(vDataItem)
+    skip = false;
     vSurfaces = vImarisApplication.GetFactory.ToSurfaces(vDataItem);
-    if strcmpi(vSurfaces.GetName, 'MAP2')
-        continue;
-    end
-    if strcmpi(vSurfaces.GetName, 'S100')
-        continue;
+    for a = 1:size(channelsToAvoid, 1)
+        if strcmpi(vSurfaces.GetName, channelsToAvoid(a, :))
+            skip = true;
+            break;
+        end
     end
     if numel(strfind(vSurfaces.GetName, 'containing')) ~= 0
+        continue;
+    end
+
+    if skip
         continue;
     end
     surfacesWithSpotsIndices = [];

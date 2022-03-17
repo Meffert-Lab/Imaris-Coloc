@@ -24,7 +24,16 @@
 %  S100 and then filtering of Lin28 surfaces.
 %
 
-function Lin28Util(aImarisApplicationID)
+function Lin28Util(aImarisApplicationID, varargin)
+
+%   PARAMS  %
+punctaString = 'lin28a';
+primaryChannelString = 'MAP2';
+secondaryChannelString = 'S100';
+%   END     %
+
+
+
 
 % connect to Imaris interface
 if ~isa(aImarisApplicationID, 'Imaris.IApplicationPrxHelper')
@@ -51,55 +60,55 @@ end
 
 for a = 1:numObjects
     Lin28Object = aSurpassScene.GetChild(a-1);
-    if vImarisApplication.GetFactory.IsSpots(Lin28Object) && strcmpi(Lin28Object.GetName(), 'Lin28a')
+    if vImarisApplication.GetFactory.IsSpots(Lin28Object) && strcmpi(Lin28Object.GetName(), punctaString)
         break;
     end
 end
-if not(vImarisApplication.GetFactory.IsSpots(Lin28Object) && strcmpi(Lin28Object.GetName(), 'Lin28a'))
-    msgbox('Please create Lin28 spots!');
+if not(vImarisApplication.GetFactory.IsSpots(Lin28Object) && strcmpi(Lin28Object.GetName(), punctaString))
+    msgbox(sprintf('%s %s %s %s', 'Please', 'create', punctaString, 'spots!'));
     return;
 end
 for a = 1:numObjects
     Lin28SurfaceObject = aSurpassScene.GetChild(a-1);
-    if vImarisApplication.GetFactory.IsSurfaces(Lin28SurfaceObject) && strcmpi(Lin28SurfaceObject.GetName(), 'Lin28a')
+    if vImarisApplication.GetFactory.IsSurfaces(Lin28SurfaceObject) && strcmpi(Lin28SurfaceObject.GetName(), punctaString)
         break;
     end
 end
-if not(vImarisApplication.GetFactory.IsSurfaces(Lin28SurfaceObject) && strcmpi(Lin28SurfaceObject.GetName(), 'Lin28a'))
-    msgbox('Please create Lin28 surfaces!');
+if not(vImarisApplication.GetFactory.IsSurfaces(Lin28SurfaceObject) && strcmpi(Lin28SurfaceObject.GetName(), punctaString))
+    msgbox(sprintf('%s %s %s %s', 'Please', 'create', punctaString, 'surfaces!'));
     return;
 end
 for a = 1:numObjects
     MAP2Object = aSurpassScene.GetChild(a-1);
-    if vImarisApplication.GetFactory.IsSurfaces(MAP2Object) && strcmpi(MAP2Object.GetName(), 'MAP2')
+    if vImarisApplication.GetFactory.IsSurfaces(MAP2Object) && strcmpi(MAP2Object.GetName(), primaryChannelString)
         break;
     end
 end
-if not(vImarisApplication.GetFactory.IsSurfaces(MAP2Object) && strcmpi(MAP2Object.GetName(), 'MAP2'))
-    msgbox('Please create MAP2 surfaces!');
+if not(vImarisApplication.GetFactory.IsSurfaces(MAP2Object) && strcmpi(MAP2Object.GetName(), primaryChannelString))
+    msgbox(sprintf('%s %s %s %s', 'Please', 'create', primaryChannelString, 'surfaces!'));
     return;
 end
 for a = 1:numObjects
     S100Object = aSurpassScene.GetChild(a-1);
-    if vImarisApplication.GetFactory.IsSurfaces(S100Object) && strcmpi(S100Object.GetName(), 'S100')
+    if vImarisApplication.GetFactory.IsSurfaces(S100Object) && strcmpi(S100Object.GetName(), secondaryChannelString)
         break;
     end
 end
-if not(vImarisApplication.GetFactory.IsSurfaces(S100Object) && strcmpi(S100Object.GetName(), 'S100'))
-    msgbox('Please create S100 surfaces!');
+if not(vImarisApplication.GetFactory.IsSurfaces(S100Object) && strcmpi(S100Object.GetName(), secondaryChannelString))
+    msgbox(sprintf('%s %s %s %s', 'Please', 'create', secondaryChannelString, 'surfaces!'));
     return;
 end
 
 vImarisApplication.SetSurpassSelection(Lin28Object);
 
-XTDeleteSpotsNotInSurface(aImarisApplicationID);
+XTDeleteSpotsNotInSurface(aImarisApplicationID, punctaString);
 S100Cleaner(aImarisApplicationID);
 
 numObjects = aSurpassScene.GetNumberOfChildren();
 SpotObject1 = vImarisApplication.GetSurpassScene.GetChild(numObjects - 2);
 SpotObject2 = vImarisApplication.GetSurpassScene.GetChild(numObjects - 1);
 
-if endsWith(string(SpotObject1.GetName()), "MAP2", 'IgnoreCase', true)
+if endsWith(string(SpotObject1.GetName()), primaryChannelString, 'IgnoreCase', true)
     MAP2SpotsObject = SpotObject1;
     S100SpotsObject = SpotObject2;
 else
@@ -113,16 +122,16 @@ aSurpassScene = vImarisApplication.GetSurpassScene();
 numObjects = aSurpassScene.GetNumberOfChildren();
 
 vImarisApplication.SetSurpassSelection(vImarisApplication.GetSurpassScene.GetChild(numObjects - 2));
-XTDeleteSurfacesNotContainingSpot(aImarisApplicationID);
+XTDeleteSurfacesNotContainingSpot(aImarisApplicationID, [primaryChannelString secondaryChannelString]);
 
 vImarisApplication.SetSurpassSelection(vImarisApplication.GetSurpassScene.GetChild(numObjects - 1));
-XTDeleteSurfacesNotContainingSpot(aImarisApplicationID);
+XTDeleteSurfacesNotContainingSpot(aImarisApplicationID, [primaryChannelString secondaryChannelString]);
 
 numObjects = aSurpassScene.GetNumberOfChildren();
 SurfaceObject1 = vImarisApplication.GetSurpassScene.GetChild(numObjects - 2);
 SurfaceObject2 = vImarisApplication.GetSurpassScene.GetChild(numObjects - 1);
 
-if endsWith (string(SurfaceObject1.GetName()), "MAP2", 'IgnoreCase', true)
+if endsWith (string(SurfaceObject1.GetName()), primaryChannelString, 'IgnoreCase', true)
     MAP2SurfaceObject = SurfaceObject1;
     S100SurfaceObject = SurfaceObject2;
 else
@@ -184,34 +193,22 @@ S100StatValues = S100StatValues(S100VolFirst:S100VolLast);
 S100volume = sum(S100StatValues);
 
 Lin28Spots = vImarisApplication.GetFactory.ToSpots(Lin28Object);
-spotResultStats = [filename, numel(Lin28Spots.GetIds), numel(MAP2Spots.GetIds), numel(S100Spots.GetIds)];
-surfResultStats = [filename, Lin28SurStat, MAP2Lin28SurStat, S100Lin28SurStat];
-normSpotResultStats = [filename, MAP2volume, numel(MAP2Spots.GetIds) / MAP2volume, S100volume, numel(S100Spots.GetIds) / S100volume, numel(S100Spots.GetIds) / (S100volume - MAP2volume)];
-normSurfResultStats = [filename, MAP2volume, MAP2Lin28SurStat / MAP2volume, S100volume, S100Lin28SurStat / S100volume, S100Lin28SurStat / (S100volume - MAP2volume)];
+spotResultStats = [filename, numel(Lin28Spots.GetIds), numel(MAP2Spots.GetIds), numel(S100Spots.GetIds), MAP2volume, S100volume];
+surfResultStats = [filename, Lin28SurStat, MAP2Lin28SurStat, S100Lin28SurStat, MAP2volume, S100volume];
 
 directory = extractBetween(filenameWithPath, 1, max(strfind(filenameWithPath, '/')));
 
 if not(isfile(directory + 'spotResults.csv'))
-    SpotResultHeader = ["FILENAME" "N TOTAL" "N MAP2" "N S100"];
+    SpotResultHeader = ["FILENAME" "N TOTAL" "N MAP2" "N S100" "MAP2 SURFACE VOLUME" "S100 SURFACE VOLUME"];
     writematrix(SpotResultHeader, directory + 'spotResults.csv', 'WriteMode', 'append');
 end
 if not(isfile(directory + 'surfResults.csv'))
-    SurfResultHeader = ["FILENAME" "VOL TOTAL" "VOL MAP2" "VOL S100"];
+    SurfResultHeader = ["FILENAME" "VOL TOTAL" "VOL MAP2" "VOL S100" "MAP2 SURFACE VOLUME" "S100 SURFACE VOLUME"];
     writematrix(SurfResultHeader, directory + 'surfResults.csv', 'WriteMode', 'append');
-end
-if not(isfile(directory + 'normSpotResults.csv'))
-    NormSpotResultHeader = ["FILENAME" "VOL MAP2" "N MAP2 NORM" "VOL S100" "N S100 NORM" "N S100-MAP2 NORM"];
-    writematrix(NormSpotResultHeader, directory + 'normSpotResults.csv', 'WriteMode', 'append');
-end
-if not(isfile(directory + 'normSurfResults.csv'))
-    NormSurfResultHeader = ["FILENAME" "VOL MAP2" "VOL IN MAP2 NORM" "VOL S100" "VOL IN S100 NORM" "VOL IN S100-MAP2 NORM"];
-    writematrix(NormSurfResultHeader, directory + 'normSurfResults.csv', 'WriteMode', 'append');
 end
 
 writematrix(spotResultStats, directory + 'spotResults.csv', 'WriteMode', 'append');
 writematrix(surfResultStats, directory + 'surfResults.csv', 'WriteMode', 'append');
-writematrix(normSpotResultStats, directory + 'normSpotResults.csv', 'WriteMode', 'append');
-writematrix(normSurfResultStats, directory + 'normSurfResults.csv', 'WriteMode', 'append');
 
 vImarisApplication.FileSave(directory + filename, '');
 
@@ -230,8 +227,10 @@ folderSize = numel(folderIMSContents);
 if currentFileIndex < folderSize
     nextFile = folderIMSContents(currentFileIndex + 1);
     vImarisApplication.FileOpen(directory + nextFile, '');
-    Lin28Util(aImarisApplicationID);
+    Lin28Util(aImarisApplicationID, 1);
 end
 
-vImarisApplication.SetVisible(1);
-msgbox('DONE');
+if isempty(varargin)
+    vImarisApplication.SetVisible(1);
+    msgbox('DONE');
+end

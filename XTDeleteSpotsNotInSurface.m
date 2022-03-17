@@ -27,7 +27,7 @@
 %       surfaces object with only surfaces that contain spots.
 %
 
-function XTDeleteSpotsNotInSurface(aImarisApplicationID)
+function XTDeleteSpotsNotInSurface(aImarisApplicationID, varargin)
 
 % connect to Imaris interface
 if ~isa(aImarisApplicationID, 'Imaris.IApplicationPrxHelper')
@@ -55,6 +55,12 @@ if ~vImarisApplication.GetFactory.IsSpots(vSpots)
   msgbox('Please select some Spots!');
   return;
 end
+
+spotsToAvoid = [];
+if ~isempty(varargin)
+    spotsToAvoid = varargin{1};
+end
+
 
 % get the spots coordinates
 vSpotsXYZ = vSpots.GetPositionsXYZ;
@@ -109,9 +115,22 @@ for vChildIndex = 1:vNumberOfChildren
   
   if vImarisApplication.GetFactory.IsSurfaces(vDataItem)
     vSurfaces = vImarisApplication.GetFactory.ToSurfaces(vDataItem);
-    if strncmpi(vSurfaces.GetName, 'Lin28a', 5)
+    skip = false;
+    if ~isempty(spotsToAvoid)
+        for a = 1:size(spotsToAvoid, 1)
+            test = spotsToAvoid(a, :);
+            test2 = vSurfaces.GetName;
+            if strncmpi(vSurfaces.GetName, spotsToAvoid(a, :), 5)
+                skip = true;
+                break;
+            end
+        end
+    end
+    
+    if skip
         continue;
     end
+
     vAllIndices = vSpotsTime;
     vAllIndicesSize = 0;
      

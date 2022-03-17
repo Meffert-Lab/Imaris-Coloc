@@ -25,6 +25,8 @@
 
 function BatchRename(aImarisApplicationID)
 
+newName = "ppib";
+
 % connect to Imaris interface
 if ~isa(aImarisApplicationID, 'Imaris.IApplicationPrxHelper')
   javaaddpath ImarisLib.jar
@@ -46,7 +48,7 @@ for a = 1:numObjects
 end
 
 ObjectToRename = aSurpassScene.GetChild(numObjects - 1);
-ObjectToRename.SetName("ppib");
+ObjectToRename.SetName(newName);
 
 filenameWithPath = string(vImarisApplication.GetCurrentFileName());
 if numel(strfind(filenameWithPath, '//')) ~= 0
