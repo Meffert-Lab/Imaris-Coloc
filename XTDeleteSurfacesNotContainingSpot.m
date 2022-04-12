@@ -58,7 +58,7 @@ end
 
 channelsToAvoid = [];
 if ~isempty(varargin)
-    channelsToAvoid = varargin{1};
+    channelsToAvoid = string(varargin);
 end
 
 
@@ -83,8 +83,8 @@ if numel(vSpotsXYZ) == 0
             skip = false;
             vSurfaces = vImarisApplication.GetFactory.ToSurfaces(vDataItem);
             if ~isempty(channelsToAvoid)
-                for a = 1:size(channelsToAvoid, 1)
-                    if strcmpi(vSurfaces.getName, channelsToAvoid(a, :))
+                for a = 1:size(channelsToAvoid, 2)
+                    if strcmpi(vSurfaces.getName, channelsToAvoid(a))
                         skip = true;
                         break;
                     end
@@ -157,10 +157,12 @@ for vChildIndex = 1:vNumberOfChildren
   if vImarisApplication.GetFactory.IsSurfaces(vDataItem)
     skip = false;
     vSurfaces = vImarisApplication.GetFactory.ToSurfaces(vDataItem);
-    for a = 1:size(channelsToAvoid, 1)
-        if strcmpi(vSurfaces.GetName, channelsToAvoid(a, :))
-            skip = true;
-            break;
+    if ~isempty(channelsToAvoid)
+        for a = 1:size(channelsToAvoid, 2)
+            if strcmpi(vSurfaces.GetName, channelsToAvoid(a))
+                skip = true;
+                break;
+            end
         end
     end
     if numel(strfind(vSurfaces.GetName, 'containing')) ~= 0

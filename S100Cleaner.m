@@ -23,7 +23,11 @@
 %  Delete spots from 'Lin28 in S100' that are already in MAP2.
 %
 
-function S100Cleaner(aImarisApplicationID)
+function S100Cleaner(aImarisApplicationID, PrimaryChannelName, SecondaryChannelName)
+
+% MAP2 is Primary Channel
+% S100 is Secondary Channel
+
 
 % connect to Imaris interface
 if ~isa(aImarisApplicationID, 'Imaris.IApplicationPrxHelper')
@@ -41,20 +45,20 @@ aSurpassScene = vImarisApplication.GetSurpassScene();
 numObjects = aSurpassScene.GetNumberOfChildren();
 for a = numObjects:-1:1
     S100Object = aSurpassScene.GetChild(a-1);
-    if vImarisApplication.GetFactory.IsSpots(S100Object) && endsWith(string(S100Object.GetName()), sprintf('%s %s', 'inside', 'S100'), 'IgnoreCase', true)
+    if vImarisApplication.GetFactory.IsSpots(S100Object) && endsWith(string(S100Object.GetName()), sprintf('%s %s', 'inside', SecondaryChannelName), 'IgnoreCase', true)
         break;
     end
 end
 
 for b = numObjects:-1:1
     MAP2Object = aSurpassScene.GetChild(b-1);
-    if vImarisApplication.GetFactory.IsSpots(MAP2Object) && endsWith(string(MAP2Object.GetName()), sprintf('%s %s', 'inside', 'MAP2'), 'IgnoreCase', true)
+    if vImarisApplication.GetFactory.IsSpots(MAP2Object) && endsWith(string(MAP2Object.GetName()), sprintf('%s %s', 'inside', PrimaryChannelName), 'IgnoreCase', true)
         break;
     end
 end
-if not(endsWith(string(S100Object.GetName()), sprintf('%s %s', 'inside', 'S100'), 'IgnoreCase', true) && ...
-        endsWith(string(MAP2Object.GetName()), sprintf('%s %s', 'inside', 'MAP2'), 'IgnoreCase', true))
-    msgbox('Please create MAP2 and S100 spots inside Lin28!');
+if not(endsWith(string(S100Object.GetName()), sprintf('%s %s', 'inside', SecondaryChannelName), 'IgnoreCase', true) && ...
+        endsWith(string(MAP2Object.GetName()), sprintf('%s %s', 'inside', PrimaryChannelName), 'IgnoreCase', true))
+    msgbox(sprintf('Please create %s and %s spots inside Lin28!', PrimaryChannelName, SecondaryChannelName));
     return;
 end
 

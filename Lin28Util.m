@@ -26,14 +26,22 @@
 
 function Lin28Util(aImarisApplicationID, varargin)
 
-%   PARAMS  %
-punctaString = 'lin28a';
-primaryChannelString = 'MAP2';
-secondaryChannelString = 'S100';
-%   END     %
-
-
-
+if isempty(varargin)
+    answer = inputdlg({'Primary Channel Name', 'Secondary Channel Name', 'Puncta Channel Name'}, 'Define Channels');
+    if isempty(answer)
+        primaryChannelString = 'MAP2';
+        secondaryChannelString = 'S100';
+        punctaString = 'lin28a';
+    else
+        primaryChannelString = string(answer(1));
+        secondaryChannelString = string(answer(2));
+        punctaString = cell2mat(answer(3));
+    end
+else
+    primaryChannelString = string(varargin(1));
+    secondaryChannelString = string(varargin(2));
+    punctaString = string(varargin(3));
+end
 
 % connect to Imaris interface
 if ~isa(aImarisApplicationID, 'Imaris.IApplicationPrxHelper')
@@ -102,7 +110,7 @@ end
 vImarisApplication.SetSurpassSelection(Lin28Object);
 
 XTDeleteSpotsNotInSurface(aImarisApplicationID, punctaString);
-S100Cleaner(aImarisApplicationID);
+S100Cleaner(aImarisApplicationID, primaryChannelString, secondaryChannelString);
 
 numObjects = aSurpassScene.GetNumberOfChildren();
 SpotObject1 = vImarisApplication.GetSurpassScene.GetChild(numObjects - 2);
@@ -122,10 +130,10 @@ aSurpassScene = vImarisApplication.GetSurpassScene();
 numObjects = aSurpassScene.GetNumberOfChildren();
 
 vImarisApplication.SetSurpassSelection(vImarisApplication.GetSurpassScene.GetChild(numObjects - 2));
-XTDeleteSurfacesNotContainingSpot(aImarisApplicationID, [primaryChannelString secondaryChannelString]);
+XTDeleteSurfacesNotContainingSpot(aImarisApplicationID, primaryChannelString, secondaryChannelString);
 
-vImarisApplication.SetSurpassSelection(vImarisApplication.GetSurpassScene.GetChild(numObjects - 1));
-XTDeleteSurfacesNotContainingSpot(aImarisApplicationID, [primaryChannelString secondaryChannelString]);
+vImarisApplication.SetSurpassSelection(vImarisApplication.GetSurpassScene.GetChild(numObjects - 1));    
+XTDeleteSurfacesNotContainingSpot(aImarisApplicationID, primaryChannelString, secondaryChannelString);
 
 numObjects = aSurpassScene.GetNumberOfChildren();
 SurfaceObject1 = vImarisApplication.GetSurpassScene.GetChild(numObjects - 2);
@@ -199,11 +207,11 @@ surfResultStats = [filename, Lin28SurStat, MAP2Lin28SurStat, S100Lin28SurStat, M
 directory = extractBetween(filenameWithPath, 1, max(strfind(filenameWithPath, '/')));
 
 if not(isfile(directory + 'spotResults.csv'))
-    SpotResultHeader = ["FILENAME" "N TOTAL" "N MAP2" "N S100" "MAP2 SURFACE VOLUME" "S100 SURFACE VOLUME"];
+    SpotResultHeader = ["FILENAME" "N TOTAL" sprintf("N %s", primaryChannelString) sprintf("N %s", secondaryChannelString) sprintf("%s SURFACE VOLUME", primaryChannelString) sprintf("%s SURFACE VOLUME", secondaryChannelString)];
     writematrix(SpotResultHeader, directory + 'spotResults.csv', 'WriteMode', 'append');
 end
 if not(isfile(directory + 'surfResults.csv'))
-    SurfResultHeader = ["FILENAME" "VOL TOTAL" "VOL MAP2" "VOL S100" "MAP2 SURFACE VOLUME" "S100 SURFACE VOLUME"];
+    SurfResultHeader = ["FILENAME" "VOL TOTAL" sprintf("VOL %s", primaryChannelString) sprintf("VOL %s", secondaryChannelString) sprintf("%s SURFACE VOLUME", primaryChannelString) sprintf("%s SURFACE VOLUME", secondaryChannelString)];
     writematrix(SurfResultHeader, directory + 'surfResults.csv', 'WriteMode', 'append');
 end
 
@@ -227,7 +235,7 @@ folderSize = numel(folderIMSContents);
 if currentFileIndex < folderSize
     nextFile = folderIMSContents(currentFileIndex + 1);
     vImarisApplication.FileOpen(directory + nextFile, '');
-    Lin28Util(aImarisApplicationID, 1);
+    Lin28Util(aImarisApplicationID, primaryChannelString, secondaryChannelString, punctaString);
 end
 
 if isempty(varargin)

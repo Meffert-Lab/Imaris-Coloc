@@ -58,7 +58,7 @@ end
 
 spotsToAvoid = [];
 if ~isempty(varargin)
-    spotsToAvoid = varargin{1};
+    spotsToAvoid = string(varargin);
 end
 
 
@@ -117,10 +117,8 @@ for vChildIndex = 1:vNumberOfChildren
     vSurfaces = vImarisApplication.GetFactory.ToSurfaces(vDataItem);
     skip = false;
     if ~isempty(spotsToAvoid)
-        for a = 1:size(spotsToAvoid, 1)
-            test = spotsToAvoid(a, :);
-            test2 = vSurfaces.GetName;
-            if strncmpi(vSurfaces.GetName, spotsToAvoid(a, :), 5)
+        for a = 1:size(spotsToAvoid, 2)
+            if strncmpi(vSurfaces.GetName, spotsToAvoid(a), 5)
                 skip = true;
                 break;
             end
