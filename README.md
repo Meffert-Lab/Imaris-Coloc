@@ -57,7 +57,9 @@ Prerequisites:
   - If they do not, you may either define each manually or use IMARIS batch processing. Caution when using batch processing - this generates a new file instead of modifying the original. You can move the batch processing result files (their filenames will have an appended timestamp) to a new directory and run BatchRename to change the name of the result to one you specify.
 
 Launch IMARIS and open the first .ims file inside of a directory you would like to analyze.
-Under Image Processing/Spots Functions, find 'Lin28Util'. Click it to run.
+Under Image Processing/Spots Functions, find 'PunctaUtil'. Click it to run.
+
+A prompt will ask for the names of the Primary Channel, Secondary Channel, and Puncta Channel. If you have highly overlapping channels where one takes up less volume than another, put the smaller volume channel as the Primary Channel (i.e. MAP2) and the larger volume channel as the Secondary Channel (i.e. S100).
 
 Lin28Util will iterate through all .ims files in the folder, starting with the file currently open, and calculate the number of Lin28 spots and volume of Lin28 surfaces inside MAP2 and S100.
 
