@@ -11,7 +11,7 @@
 %    <CustomTools>
 %      <Menu>
 %         <Submenu name="Spots Functions">        
-%        <Item name="Lin28 Utility" icon="Matlab" tooltip="Run all Lin28 processing steps">
+%        <Item name="Puncta Utility" icon="Matlab" tooltip="Run all puncta processing steps">
 %          <Command>MatlabXT::Lin28Util(%i)</Command>
 %        </Item>
 %         </Submenu>
@@ -20,18 +20,17 @@
 % 
 %
 %  Description:
-%  Perform selection for Lin28 inside MAP2 and S100 followed by cleaning of
-%  S100 and then filtering of Lin28 surfaces.
+%  Perform selection for puncta inside a primary and a secondary channel
+%  followed by cleaning and then filtering of surfaces.
 %
 
-function Lin28Util(aImarisApplicationID, varargin)
+function PunctaUtil(aImarisApplicationID, varargin)
 
 if isempty(varargin)
     answer = inputdlg({'Primary Channel Name', 'Secondary Channel Name', 'Puncta Channel Name'}, 'Define Channels');
     if isempty(answer)
-        primaryChannelString = 'MAP2';
-        secondaryChannelString = 'S100';
-        punctaString = 'lin28a';
+        msgbox('NO INPUT');
+        return;
     else
         primaryChannelString = string(answer(1));
         secondaryChannelString = string(answer(2));
@@ -235,7 +234,7 @@ folderSize = numel(folderIMSContents);
 if currentFileIndex < folderSize
     nextFile = folderIMSContents(currentFileIndex + 1);
     vImarisApplication.FileOpen(directory + nextFile, '');
-    Lin28Util(aImarisApplicationID, primaryChannelString, secondaryChannelString, punctaString);
+    PunctaUtil(aImarisApplicationID, primaryChannelString, secondaryChannelString, punctaString);
 end
 
 if isempty(varargin)
