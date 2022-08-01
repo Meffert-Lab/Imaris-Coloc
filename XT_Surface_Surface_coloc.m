@@ -188,14 +188,14 @@ directory = extractBetween(filenameWithPath, 1, max(strfind(filenameWithPath, '/
 
 surfResultStats = [filename, ColocVolume, MAP2volume, S100volume];
 
-if not(isfile(directory + 'colocResults.csv'))
-    ColocResultHeader = ["FILENAME" "VOL COLOC" "VOL MAP2" "VOL S100"];
+%if not(isfile(directory + 'colocResults.csv'))
+    ColocResultHeader = ["FILENAME" "VOL COLOC" sprintf('VOL %s', 'MAP2') sprintf('VOL %s', 'S100')];
     writematrix(ColocResultHeader, directory + 'colocResults.csv', 'WriteMode', 'append');
-end
+%end
 
 writematrix(surfResultStats, directory + 'colocResults.csv', 'WriteMode', 'append');
 
-vImarisApplication.FileSave(directory + filename, '');
+%vImarisApplication.FileSave(directory + filename, '');
 
 folderContents = dir (directory);
 folderIMSContents = strings;
