@@ -29,7 +29,7 @@
 %REVISION: Now batch processes all files in a folder. The generated
 %surface has no smoothing.
 
-function XT_Surface_Surface_coloc(aImarisApplicationID)
+function XT_Surface_Surface_coloc(aImarisApplicationID, varargin)
 if ~isa(aImarisApplicationID, 'Imaris.IApplicationPrxHelper')
   javaaddpath ImarisLib.jar
   vImarisLib = ImarisLib;
@@ -70,21 +70,45 @@ surfaceObjects = surfaceObjects(surfaceObjectsNames ~= "");
 surfaceObjectsNames = surfaceObjectsNames(surfaceObjectsNames ~= "");
 
 %%
-%Allow user to select surfaces to analyze
-[selectedSurfaceIndex1, tf] = listdlg('PromptString','Select First Surface', 'ListString', surfaceObjectsNames, 'SelectionMode', 'single');
-if tf == 0
-    msgbox('You must select a surface!');
+%Allow user to select surfaces to analyze, or take parameters from batch
+
+if isempty(varargin)
+    [selectedSurfaceIndex1, tf] = listdlg('PromptString','Select First Surface', 'ListString', surfaceObjectsNames, 'SelectionMode', 'single');
+    if tf == 0
+        msgbox('You must select a surface!');
+        return;
+    end
+    [selectedSurfaceIndex2, tf] = listdlg('PromptString', 'Select Second Surface', 'ListString', surfaceObjectsNames, 'SelectionMode', 'single');
+    if tf == 0
+        msgbox('You must select a surface!');
+        return;
+    end
+else
+    if ~varargin(1)
+        selectedSurfaceIndex1 = strfind(lower(surfaceObjectsNames), lower(varargin(2)));
+        selectedSurfaceIndex2 = strfind(lower(surfaceObjectsNames), lower(varargin(3)));
+    
+    elseif varargin(1)
+        selectedSurfaceIndex1 = varargin(2);
+        selectedSurfaceIndex2 = varargin(3);
+    
+    else
+        msgbox(sprintf('BATCH ERROR1 %s', string(vImarisApplication.GetCurrentFileName())))
+        return;
+    end
+end
+
+if selectedSurfaceIndex1 > length(surfaceObjectsNames)
+    msgbox(sprintf('BATCH ERROR2 %s', string(vImarisApplication.GetCurrentFileName())))
+    return;
+end
+if selectedSurfaceIndex2 > length(surfaceObjectsNames)
+    msgbox(sprintf('BATCH ERROR3 %s', string(vImarisApplication.GetCurrentFileName())))
     return;
 end
 
 MAP2Surface = surfaceObjects(selectedSurfaceIndex1, 1);
 MAP2SurfaceName = surfaceObjectsNames(selectedSurfaceIndex1, 1);
-
-[selectedSurfaceIndex2, tf] = listdlg('PromptString', 'Select Second Surface', 'ListString', surfaceObjectsNames, 'SelectionMode', 'single');
-if tf == 0
-    msgbox('You must select a surface!');
-    return;
-end
 
 S100Surface = surfaceObjects(selectedSurfaceIndex2, 1);
 S100SurfaceName = surfaceObjectsNames(selectedSurfaceIndex2, 1);
