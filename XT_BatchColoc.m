@@ -82,20 +82,26 @@ switch stringOrNum
         doIndices = true;
 end
 
-if sum(matches(string(surfaceIDs), '')) ~= 0
+if sum(matches(string(surfaceIDs), '')) ~= 0 || isempty(surfaceIDs)
     msgbox('You must define an identifier for each surface!');
     return;
 end
 
-surfaceCombinations = surfaceIDs(nchoosek(1:length(surfaceIDs), 2));
+if length(surfaceIDs) == 2
+    surfaceCombinations = surfaceIDs.';
+else
+    surfaceCombinations = surfaceIDs(nchoosek(1:length(surfaceIDs), 2));
+end
 
 folderContents = dir (directory);
-for i = 1:size(folderContents)
+for i = 1:size(folderContents, 1)
     if endsWith(folderContents(i,1).name, '.ims')
         vImarisApplication.FileOpen(sprintf('%s/%s', directory, folderContents(i,1).name), '');
-        for a = 1:length(surfaceCombinations)
+        for a = 1:size(surfaceCombinations, 1)
             XT_Surface_Surface_coloc(aImarisApplicationID, doIndices, string(surfaceCombinations(a, 1)), string(surfaceCombinations(a, 2)));
         end
         vImarisApplication.FileSave(sprintf('%s/%s', directory, folderContents(i,1).name), '');
     end
 end
+
+msgbox('DONE');
