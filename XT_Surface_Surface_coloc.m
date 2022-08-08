@@ -84,13 +84,13 @@ if isempty(varargin)
         return;
     end
 else
-    if ~varargin(1)
-        selectedSurfaceIndex1 = strfind(lower(surfaceObjectsNames), lower(varargin(2)));
-        selectedSurfaceIndex2 = strfind(lower(surfaceObjectsNames), lower(varargin(3)));
+    if ~cell2mat(varargin(1))
+        selectedSurfaceIndex1 = strfind(lower(surfaceObjectsNames), lower(cell2mat(varargin(2))));
+        selectedSurfaceIndex2 = strfind(lower(surfaceObjectsNames), lower(cell2mat(varargin(3))));
     
-    elseif varargin(1)
-        selectedSurfaceIndex1 = varargin(2);
-        selectedSurfaceIndex2 = varargin(3);
+    elseif cell2mat(varargin(1))
+        selectedSurfaceIndex1 = str2double(string(varargin(2)));
+        selectedSurfaceIndex2 = str2double(string(varargin(3)));
     
     else
         msgbox(sprintf('BATCH ERROR1 %s', string(vImarisApplication.GetCurrentFileName())))
@@ -225,4 +225,6 @@ ColocResultHeader = ["FILENAME" "VOL COLOC" sprintf('VOL %s', MAP2SurfaceName) s
 writematrix(ColocResultHeader, directory + 'colocResults.csv', 'WriteMode', 'append');
 writematrix(surfResultStats, directory + 'colocResults.csv', 'WriteMode', 'append');
 
-msgbox('DONE');
+if isempty(varargin)
+    msgbox('DONE');
+end

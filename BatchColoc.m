@@ -44,12 +44,14 @@ end
 switch stringOrNum
     case 'Surface Name'
         surfaceIDs = string(inputdlg(prompts, 'Surface Names'));
+        doIndices = false;
     case 'Surface Index'
         surfaceIDs = str2double(string(inputdlg(prompts, 'Surface Indices')));
         if sum(isnan(surfaceIDs)) ~= 0
             msgbox('Invalid Input!');
             return;
         end
+        doIndices = true;
 end
 
 if sum(matches(string(surfaceIDs), '')) ~= 0
@@ -64,7 +66,7 @@ for i = 1:size(folderContents)
     if endsWith(folderContents(i,1).name, '.ims')
         vImarisApplication.FileOpen(sprintf('%s/%s', directory, folderContents(i,1).name), '');
         for a = 1:length(surfaceCombinations)
-            XT_Surface_Surface_coloc(aImarisApplicationID, string(surfaceCombinations(a, 1)), string(surfaceCombinations(a, 2)));
+            XT_Surface_Surface_coloc(aImarisApplicationID, doIndices, string(surfaceCombinations(a, 1)), string(surfaceCombinations(a, 2)));
         end
         vImarisApplication.FileSave(sprintf('%s/%s', directory, folderContents(i,1).name), '');
     end
