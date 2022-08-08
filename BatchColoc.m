@@ -1,4 +1,32 @@
-function BatchColoc(aImarisApplicationID)
+%Batch Colocalization
+
+%Written by Matthew J. Gastinger, Bitplane Advanced Application Scientist.  
+%March 2014. Revised by Sreenivas Eadara for the Meffert Lab.
+%
+%<CustomTools>
+%      <Menu>
+%       <Submenu name="Surfaces Functions">
+%        <Item name="Batch coloc" icon="Matlab">
+%          <Command>MatlabXT::XT_BatchColoc(%i)</Command>
+%        </Item>
+%       </Submenu>
+%      </Menu>
+%      <SurpassTab>
+%        <SurpassComponent name="bpSurfaces">
+%          <Item name="Batch coloc" icon="Matlab">
+%            <Command>MatlabXT::XT_BatchColoc(%i)</Command>
+%          </Item>
+%        </SurpassComponent>
+%      </SurpassTab>
+%    </CustomTools>
+% 
+%Description
+%
+%This XTension will call XT_Surface_Surface_coloc for all files in a given
+%directory. The surfaces to be analyzed are set by the user, who can
+%specify either indices or names for each.
+
+function XT_BatchColoc(aImarisApplicationID)
 if ~isa(aImarisApplicationID, 'Imaris.IApplicationPrxHelper')
   javaaddpath ImarisLib.jar
   vImarisLib = ImarisLib;
