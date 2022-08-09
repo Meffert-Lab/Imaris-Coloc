@@ -59,8 +59,8 @@ if isnan(numSurfaces)
     msgbox('Must be a valid number!');
     return;
 end
-if numSurfaces < 1
-    msgbox('Must have > 0 surfaces!');
+if numSurfaces < 2
+    msgbox('Must have at least 2 surfaces!');
     return;
 end
 
