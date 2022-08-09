@@ -57,7 +57,8 @@ surfaceObjectsNames = strings(numObjects, 1);
 for a = 1:numObjects
     surpassObject = aSurpassScene.GetChild(a-1);
     if vImarisApplication.GetFactory.IsSurfaces(surpassObject)
-        surfaceObjects(a, 1) = vImarisApplication.GetFactory.ToSurfaces(surpassObject);
+        surfaceObjects(a, 1) = ...
+            vImarisApplication.GetFactory.ToSurfaces(surpassObject);
         surfaceObjectsNames(a) = surpassObject.GetName();
     end
 end
@@ -73,37 +74,46 @@ surfaceObjectsNames = surfaceObjectsNames(surfaceObjectsNames ~= "");
 %Allow user to select surfaces to analyze, or take parameters from batch
 
 if isempty(varargin)
-    [selectedSurfaceIndex1, tf] = listdlg('PromptString','Select First Surface', 'ListString', surfaceObjectsNames, 'SelectionMode', 'single');
+    [selectedSurfaceIndex1, tf] = listdlg('PromptString', ...
+        'Select First Surface', 'ListString', surfaceObjectsNames, ...
+        'SelectionMode', 'single');
     if tf == 0
         msgbox('You must select a surface!');
         return;
     end
-    [selectedSurfaceIndex2, tf] = listdlg('PromptString', 'Select Second Surface', 'ListString', surfaceObjectsNames, 'SelectionMode', 'single');
+    [selectedSurfaceIndex2, tf] = listdlg('PromptString', ...
+        'Select Second Surface', 'ListString', surfaceObjectsNames, ...
+        'SelectionMode', 'single');
     if tf == 0
         msgbox('You must select a surface!');
         return;
     end
 else
     if ~cell2mat(varargin(1))
-        selectedSurfaceIndex1 = strfind(lower(surfaceObjectsNames), lower(cell2mat(varargin(2))));
-        selectedSurfaceIndex2 = strfind(lower(surfaceObjectsNames), lower(cell2mat(varargin(3))));
+        selectedSurfaceIndex1 = strfind(lower(surfaceObjectsNames), ...
+            lower(cell2mat(varargin(2))));
+        selectedSurfaceIndex2 = strfind(lower(surfaceObjectsNames), ...
+            lower(cell2mat(varargin(3))));
     
     elseif cell2mat(varargin(1))
         selectedSurfaceIndex1 = str2double(string(varargin(2)));
         selectedSurfaceIndex2 = str2double(string(varargin(3)));
     
     else
-        msgbox(sprintf('BATCH ERROR1 %s', string(vImarisApplication.GetCurrentFileName())))
+        msgbox(sprintf('BATCH ERROR1 %s', ...
+            string(vImarisApplication.GetCurrentFileName())))
         return;
     end
 end
 
 if selectedSurfaceIndex1 > length(surfaceObjectsNames)
-    msgbox(sprintf('BATCH ERROR2 %s', string(vImarisApplication.GetCurrentFileName())))
+    msgbox(sprintf('BATCH ERROR2 %s', ...
+        string(vImarisApplication.GetCurrentFileName())))
     return;
 end
 if selectedSurfaceIndex2 > length(surfaceObjectsNames)
-    msgbox(sprintf('BATCH ERROR3 %s', string(vImarisApplication.GetCurrentFileName())))
+    msgbox(sprintf('BATCH ERROR3 %s', ...
+        string(vImarisApplication.GetCurrentFileName())))
     return;
 end
 
@@ -117,7 +127,7 @@ S100SurfaceName = surfaceObjectsNames(selectedSurfaceIndex2, 1);
 %Create a new folder object for new surfaces
 Coloc_surfaces = vImarisApplication.GetFactory;
 result = Coloc_surfaces.CreateDataContainer;
-result.SetName(sprintf('%s &%s Surface', MAP2SurfaceName, S100SurfaceName));
+result.SetName(sprintf('%s&%s Surface', MAP2SurfaceName, S100SurfaceName));
 
 %clone Dataset
 vDataSet = vImarisApplication.GetDataSet.Clone;
@@ -147,8 +157,12 @@ vLastChannel=TotalNumberofChannels-1;
 %Generate surface mask for each surface over time - currently using
 %GetDataVolumeBytes, as other methods suchas 1DArrayBytes were not working
 for vTimeIndex= 0:aSizeT-1
-    vSurfaces1Mask = MAP2Surface.GetMask(aExtendMinX,aExtendMinY,aExtendMinZ,aExtendMaxX,aExtendMaxY,aExtendMaxZ,aSizeX, aSizeY,aSizeZ,vTimeIndex);
-    vSurfaces2Mask = S100Surface.GetMask(aExtendMinX,aExtendMinY,aExtendMinZ,aExtendMaxX,aExtendMaxY,aExtendMaxZ,aSizeX, aSizeY,aSizeZ,vTimeIndex);
+    vSurfaces1Mask = MAP2Surface.GetMask(aExtendMinX,aExtendMinY, ...
+        aExtendMinZ,aExtendMaxX,aExtendMaxY,aExtendMaxZ,aSizeX, ...
+        aSizeY,aSizeZ,vTimeIndex);
+    vSurfaces2Mask = S100Surface.GetMask(aExtendMinX,aExtendMinY, ...
+        aExtendMinZ,aExtendMaxX,aExtendMaxY,aExtendMaxZ, ...
+        aSizeX,aSizeY,aSizeZ,vTimeIndex);
     
     ch1 = vSurfaces1Mask.GetDataVolumeAs1DArrayBytes(0,vTimeIndex);
     ch2 = vSurfaces2Mask.GetDataVolumeAs1DArrayBytes(0,vTimeIndex);
@@ -161,15 +175,18 @@ for vTimeIndex= 0:aSizeT-1
     vDataSet.SetDataVolumeAs1DArrayBytes(Coloc, vLastChannel, vTimeIndex);
 end
 
-vDataSet.SetChannelName(vLastChannel,sprintf('%s &%s Channel', MAP2SurfaceName, S100SurfaceName));
+vDataSet.SetChannelName(vLastChannel,sprintf('%s &%s Channel', ...
+    MAP2SurfaceName, S100SurfaceName));
 vDataSet.SetChannelRange(vLastChannel,0,1);
 
 vImarisApplication.SetDataSet(vDataSet);
 
 %Run the Surface Creation Wizard on the new channel
 ip = vImarisApplication.GetImageProcessing;
-Coloc_surfaces1 = ip.DetectSurfaces(vDataSet, [], vLastChannel, vSmoothingFactor, 0, false, 0, '');
-Coloc_surfaces1.SetName(sprintf('%s &%s Surface', MAP2SurfaceName, S100SurfaceName));
+Coloc_surfaces1 = ip.DetectSurfaces(vDataSet, [], vLastChannel, ...
+    vSmoothingFactor, 0, false, 0, '');
+Coloc_surfaces1.SetName(sprintf('%s &%s Surface', MAP2SurfaceName, ...
+    S100SurfaceName));
 Coloc_surfaces1.SetColorRGBA((rand(1, 1)) * 256 * 256 * 256 );
 
 %Add new surface to Surpass Scene
@@ -212,18 +229,25 @@ ColocVolume = sum(ColocStatValues);
 %Find image directory
 filenameWithPath = string(vImarisApplication.GetCurrentFileName());
 if numel(strfind(filenameWithPath, '//')) ~= 0
-    filenameWithPath = extractBetween(filenameWithPath, max(strfind(filenameWithPath, "//")) + 1, strlength(filenameWithPath));
+    filenameWithPath = extractBetween(filenameWithPath, ...
+        max(strfind(filenameWithPath, "//")) + 1, ...
+        strlength(filenameWithPath));
 end
 
-filename = extractBetween(filenameWithPath, max(strfind(filenameWithPath, "/")) + 1, strlength(filenameWithPath));
-directory = extractBetween(filenameWithPath, 1, max(strfind(filenameWithPath, '/')));
+filename = extractBetween(filenameWithPath, ...
+    max(strfind(filenameWithPath, "/")) + 1, strlength(filenameWithPath));
+directory = extractBetween(filenameWithPath, 1, ...
+    max(strfind(filenameWithPath, '/')));
 
 %Save results to image directory. Creates a new result file if none exists
 surfResultStats = [filename, ColocVolume, MAP2volume, S100volume];
-ColocResultHeader = ["FILENAME" "VOL COLOC" sprintf('VOL %s', MAP2SurfaceName) sprintf('VOL %s', S100SurfaceName)];
+ColocResultHeader = ["FILENAME" "VOL COLOC" ...
+    sprintf('VOL %s', MAP2SurfaceName) sprintf('VOL %s', S100SurfaceName)];
 
-writematrix(ColocResultHeader, directory + 'colocResults.csv', 'WriteMode', 'append');
-writematrix(surfResultStats, directory + 'colocResults.csv', 'WriteMode', 'append');
+writematrix(ColocResultHeader, directory + 'colocResults.csv', ...
+    'WriteMode', 'append');
+writematrix(surfResultStats, directory + 'colocResults.csv', ...
+    'WriteMode', 'append');
 
 if isempty(varargin)
     msgbox('DONE');
