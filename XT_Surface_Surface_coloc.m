@@ -64,7 +64,7 @@ for a = 1:numObjects
 end
 
 if sum(matches(surfaceObjectsNames, '')) >= length(surfaceObjectsNames) - 1
-    msgbox('Please create some Surfaces in the Surpass Scene!');
+    msgbox('Please create at least 2 Surfaces in the Surpass Scene!');
     return;
 end
 surfaceObjects = surfaceObjects(surfaceObjectsNames ~= "");
