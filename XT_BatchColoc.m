@@ -96,6 +96,11 @@ if sum(matches(string(surfaceIDs), '')) ~= 0 || isempty(surfaceIDs)
     return;
 end
 
+if length(unique(lower(surfaceIDs))) == 1
+    msgbox('You must define at least 2 unique IDs!');
+    return;
+end
+
 %%
 %Generate all possible combinations of the surfaces for analysis
 if length(surfaceIDs) == 2

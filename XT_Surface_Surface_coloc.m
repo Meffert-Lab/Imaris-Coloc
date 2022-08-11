@@ -63,7 +63,7 @@ for a = 1:numObjects
     end
 end
 
-if isempty(surfaceObjects)
+if sum(matches(surfaceObjectsNames, '')) >= length(surfaceObjectsNames) - 1
     msgbox('Please create some Surfaces in the Surpass Scene!');
     return;
 end
@@ -114,6 +114,11 @@ end
 if selectedSurfaceIndex2 > length(surfaceObjectsNames)
     msgbox(sprintf('BATCH ERROR3 %s', ...
         string(vImarisApplication.GetCurrentFileName())))
+    return;
+end
+
+if selectedSurfaceIndex1 == selectedSurfaceIndex2
+    msgbox('You must select unique Surfaces!');
     return;
 end
 
