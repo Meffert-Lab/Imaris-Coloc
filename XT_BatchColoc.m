@@ -41,11 +41,11 @@ end
 %Collect path containing .ims files
 directory = string(inputdlg(['Path Containing .ims Files. Omit ' ...
     'trailing slash.']));
-if ~isfolder(sprintf('%s/', directory))
+if ~isfolder(sprintf('%s%s', directory, filesep))
     msgbox('Not a valid directory!')
     return;
 end
-if endsWith(directory, '/')
+if endsWith(directory, filesep)
     msgbox('Omit trailing slash!');
     return;
 end
@@ -114,15 +114,15 @@ end
 folderContents = dir (directory);
 for i = 1:size(folderContents, 1)
     if endsWith(folderContents(i,1).name, '.ims')
-        vImarisApplication.FileOpen(sprintf('%s/%s', directory, ...
-            folderContents(i,1).name), '');
+        vImarisApplication.FileOpen(sprintf('%s%s%s', directory, ...
+            filesep, folderContents(i,1).name), '');
         for a = 1:size(surfaceCombinations, 1)
             XT_Surface_Surface_coloc(aImarisApplicationID, doIndices, ...
                 string(surfaceCombinations(a, 1)), ...
                 string(surfaceCombinations(a, 2)));
         end
-        vImarisApplication.FileSave(sprintf('%s/%s', directory, ...
-            folderContents(i,1).name), '');
+        vImarisApplication.FileSave(sprintf('%s%s%s', directory, ...
+            filesep, folderContents(i,1).name), '');
     end
 end
 

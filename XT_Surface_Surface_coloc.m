@@ -233,16 +233,16 @@ ColocVolume = sum(ColocStatValues);
 
 %Find image directory
 filenameWithPath = string(vImarisApplication.GetCurrentFileName());
-if numel(strfind(filenameWithPath, '//')) ~= 0
-    filenameWithPath = extractBetween(filenameWithPath, ...
-        max(strfind(filenameWithPath, "//")) + 1, ...
-        strlength(filenameWithPath));
-end
 
 filename = extractBetween(filenameWithPath, ...
-    max(strfind(filenameWithPath, "/")) + 1, strlength(filenameWithPath));
+    max(strfind(filenameWithPath, filesep)) + 1, strlength(filenameWithPath));
 directory = extractBetween(filenameWithPath, 1, ...
-    max(strfind(filenameWithPath, '/')));
+    max(strfind(filenameWithPath, filesep)));
+
+if ~isfolder(directory)
+    msgbox('Invalid Path! Results not writable.');
+    return;
+end
 
 %Save results to image directory. Creates a new result file if none exists
 surfResultStats = [filename, ColocVolume, MAP2volume, S100volume];
