@@ -2,8 +2,8 @@
 
 ## Requirements
 
-    MATLAB R2021B or later (untested with MATLAB Runtime)
-    IMARIS 9.6.1 or later
+- MATLAB R2021B or later (untested with MATLAB Runtime)
+- IMARIS 9.6.1 or later
 
 ## Installation
 
